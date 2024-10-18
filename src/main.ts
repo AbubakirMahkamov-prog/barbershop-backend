@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './middleware/filters/http-exception.filter';
-import { getBotToken } from "nestjs-telegraf";
 import { ConfigService } from '@nestjs/config'; // Import ConfigService
 
 async function bootstrap() {
