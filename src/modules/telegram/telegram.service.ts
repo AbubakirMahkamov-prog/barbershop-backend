@@ -7,7 +7,7 @@ export class TelegramService implements OnModuleInit {
   private bot: TelegramBot;
 
   constructor() {
-    this.bot = new TelegramBot('7835154864:AAHcJDxPKvfY1ijLh0fs9KYp1m6j_J4HRhA', { polling: true });
+    this.bot = new TelegramBot('', { polling: true });
   }
 
   onModuleInit() {
