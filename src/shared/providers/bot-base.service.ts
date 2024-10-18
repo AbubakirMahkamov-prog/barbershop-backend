@@ -37,18 +37,7 @@ export class BotBaseService {
         const updatedJsonString = JSON.stringify(objToUpdate, null, 2); 
         await fsPromise.writeFile(currentPath, updatedJsonString, 'utf8');
     }
-    async sendMessage(chatId: number, message: string, markup?: any) {
-        console.log(markup);
-        markup = {
-            reply_markup: {
-                keyboard: [
-                    [{ text: 'Send Contact', request_contact: true }]
-                ],
-                resize_keyboard: true,  // Ensures the keyboard fits the screen
-                one_time_keyboard: true // Optional: keyboard hides after use
-            }
-        };
-        console.log(markup)
+    async sendMessage(chatId: number, message: string, markup?: any) {      
         await this.bot.telegram.sendMessage(chatId, message,
         {
             reply_markup: markup,

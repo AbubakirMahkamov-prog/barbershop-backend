@@ -44,6 +44,7 @@ export class BotService extends BotBaseService {
       await this.sendMessage(chatId, BotMessages.startWithPhone(fullName), markup);
       return;
     }
+    console.log(user)
     await this.sendMessage(chatId, BotMessages.start(fullName), markup);
     
   });
