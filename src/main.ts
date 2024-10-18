@@ -11,8 +11,6 @@ async function bootstrap() {
   
   // Get the port from ConfigService (use default 3000 if not specified)
   const port = configService.get<number>('PORT') || 3000;
-	const mock_int = app.get(getBotToken('bot'))
-	app.use(mock_int.webhookCallback('/bot'))
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(port);
 }

@@ -6,10 +6,9 @@ import { UsersModule } from './modules/user/user.module'
 import { ChatModule } from './modules/chat/chat.module'
 import { LoggerModule } from './middleware/logger/logger.module';
 import { LoggerMiddleware } from './middleware/logger/logger.middleware';
-import { BotModule } from './modules/bot/bot.module';
 
 @Module({
-  imports: [SharedModule, UsersModule, ChatModule, LoggerModule, BotModule],
+  imports: [SharedModule, UsersModule, ChatModule, LoggerModule],
   controllers: [AppController],
   providers: [AppService],
 })
