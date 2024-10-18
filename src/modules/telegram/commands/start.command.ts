@@ -5,13 +5,12 @@ import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()
 export class StartCommand {
-  @Inject() private telegram: TelegramService;
   constructor(private readonly telegramService: TelegramService) {}
  
   @Command('start')
   execute(msg: any) {
       const chatId = msg.chat.id;
-      console.log(this.telegramService, this.telegram)
+      console.log(this.telegramService)
     // this.telegramService.sendMessage(chatId, 'Welcome to the bot!');
   }
 }
