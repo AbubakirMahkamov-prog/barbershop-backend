@@ -10,6 +10,7 @@ export class StartCommand {
   @Command('start')
   execute(msg: any) {
       const chatId = msg.chat.id;
+      console.log(this.telegramService)
     // this.telegramService.sendMessage(chatId, 'Welcome to the bot!');
   }
 }

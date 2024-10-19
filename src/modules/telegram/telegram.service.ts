@@ -1,13 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import TelegramBot  from 'node-telegram-bot-api';
 import { CommandHandler } from './decorators/command-handler.decorator';
+import { ConfigService } from '@nestjs/config'; // Import ConfigService
 
 @Injectable()
 export class TelegramService implements OnModuleInit {
   private bot: TelegramBot;
 
-  constructor() {
-    this.bot = new TelegramBot('7835154864:AAHcJDxPKvfY1ijLh0fs9KYp1m6j_J4HRhA', { polling: true });
+  constructor(private readonly configService: ConfigService) {
+    this.bot = new TelegramBot(configService.get<string>('BOT_TOKEN'), { polling: true });
   }
 
   onModuleInit() {
