@@ -4,6 +4,7 @@ import { HelpCommand } from './commands/help.command';
 import { StartCommand } from './commands/start.command';
 
 @Module({
+  imports: [],
   providers: [TelegramService, HelpCommand, StartCommand],
   exports: [TelegramService],
 })

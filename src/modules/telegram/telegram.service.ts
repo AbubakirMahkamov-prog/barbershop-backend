@@ -11,20 +11,17 @@ export class TelegramService implements OnModuleInit {
   }
 
   onModuleInit() {
-    this.bot.on("command", () => {
-        // console.log('start')
-    })
     this.initializeBot();
   }
 
   private initializeBot() {
     // Register command handlers
-    // const commands = CommandHandler.getCommands();
-    // Object.keys(commands).forEach((command) => {
-    //   this.bot.onText(new RegExp(`/${command}`), (msg) => {
-    //     commands[command](msg);
-    //   });
-    // });
+    const commands = CommandHandler.getCommands();
+    Object.keys(commands).forEach((command) => {
+      this.bot.onText(new RegExp(`/${command}`), (msg) => {
+        commands[command](msg);
+      });
+    });
   }
 
   sendMessage(chatId: number, text: string) {
