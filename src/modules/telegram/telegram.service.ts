@@ -3,6 +3,7 @@ import { ModuleRef } from '@nestjs/core'; // Import ModuleRef
 import TelegramBot from 'node-telegram-bot-api';
 import { CommandHandler } from './decorators/command-handler.decorator';
 import { ConfigService } from '@nestjs/config';
+import { MessageHandler } from './decorators/message/message-handler.decorator';
 
 @Injectable()
 export class TelegramService implements OnModuleInit {
@@ -24,11 +25,20 @@ export class TelegramService implements OnModuleInit {
     for (const command of Object.keys(commandClasses)) {
       const CommandClass = commandClasses[command];
       const commandInstance = await this.moduleRef.create(CommandClass);
-
       this.bot.onText(new RegExp(`/${command}`), (msg) => {
         commandInstance.execute(msg);
       });
     }
+    const messageClasses = MessageHandler.getMessages();
+    this.bot.on('message', async (msg) => {
+      const { text } = msg;
+      const handlers = messageClasses[text]
+      for (const handler of handlers) {
+        const MessageClass = handler.class;
+        const messageInstance = await this.moduleRef.create(MessageClass);
+        messageInstance[handler.methodName](msg)
+      }
+    })
   }
 
   sendMessage(chatId: number, text: string) {
