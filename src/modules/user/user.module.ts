@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './user.controller';
 import { UsersService } from './user.service';
-import { SharedModule } from '../../shared/shared.module'; // Import the SharedModule
+import { SharedModule } from '../../shared/shared.module';
 
 
 @Module({
-  imports: [SharedModule], // Import the SharedModule to access MongooseService
-  controllers: [UsersController],  // Register the UsersController
+  imports: [SharedModule],
+  controllers: [UsersController],
   providers: [
-    UsersService,                   // Register the UsersService
+    UsersService,
   ],
+  exports: [UsersService]
 })
 export class UsersModule {}

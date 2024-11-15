@@ -1,14 +1,18 @@
+import { USER_STEP } from 'src/modules/user/constants/user-step.enum';
 import { Message } from '../decorators/message/message.decorator';
 import { TelegramService } from '../telegram.service';
 import { Injectable, Inject } from '@nestjs/common';
+import { UsersService } from 'src/modules/user/user.service';
 
 @Injectable()
 export class StartCommand {
+  @Inject() userService: UsersService;
   constructor(private readonly telegramService: TelegramService) {}
   
   @Message('/start')
-  execute(msg: any) {
+  async execute(msg: any) {
     const chatId = msg.chat.id;
+    await this.userService.setStep(chatId, USER_STEP.START);
     this.telegramService.sendMessage(chatId, 'Welcome to the bot!');
   }
 
