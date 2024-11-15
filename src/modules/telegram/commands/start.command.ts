@@ -13,9 +13,12 @@ export class StartCommand {
   async execute(msg: any) {
     const chatId = msg.chat.id;
     await this.userService.setStep(chatId, USER_STEP.START);
-    this.telegramService.sendMessage(chatId, 'Welcome to the bot!');
+    const isVerified = await this.userService.checkVerified(chatId);
+    if (!isVerified) {
+      this.telegramService.sendMessage(chatId, "Assalomu alaykum!");
+      this.telegramService.sendMessage(chatId, "Ismingizni kiriting!");
+    }
   }
-
   @Message('test')
   test(msg: any) {
     const chatId = msg.chat.id;

@@ -35,7 +35,13 @@ export class UsersService {
       })
     }
   }
-
+  async checkVerified(chatId: string) {
+    const model = await this.userModel.findOne({ chat_id: chatId }).exec();
+    if (!isEmpty(model?.phone_number)) {
+      return true;
+    }
+    return false;
+  }
   async create(user: Partial<User>): Promise<User> {
     const newUser = new this.userModel(user);
     return newUser.save();
