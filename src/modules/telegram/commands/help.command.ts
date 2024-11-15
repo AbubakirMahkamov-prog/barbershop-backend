@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { Command } from '../decorators/command.decorator';
 import { TelegramService } from '../telegram.service';
+import { Message } from "../decorators/message/message.decorator";
 
 @Injectable()
 export class HelpCommand {
   constructor(private readonly telegramService: TelegramService) {}
-  @Command('help')
+  @Message('help')
   execute(msg: any) {
     // const chatId = msg.chat.id;
     console.log(this.telegramService);
