@@ -1,8 +1,9 @@
 import { MessageHandler } from './message-handler.decorator';
 
-export function Message(name: string) {
+export function Message(data: { name?: string, step?: number }) {
+  const { name, step } = data;
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const methodName = propertyKey;
-    MessageHandler.addHandler(name, methodName, target.constructor);
+    MessageHandler.addHandler(methodName, target.constructor, name, step);
   };
 }
