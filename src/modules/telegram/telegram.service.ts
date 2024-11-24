@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core'; // Import ModuleRef
-import TelegramBot, { Message } from 'node-telegram-bot-api';
+import TelegramBot, { KeyboardButton, Message, ReplyKeyboardMarkup } from 'node-telegram-bot-api';
 import { ConfigService } from '@nestjs/config';
 import { MessageHandler } from './decorators/message/message-handler.decorator';
 import { CommandHandler } from './decorators/message/command-handler.decorator';
@@ -88,7 +88,12 @@ export class TelegramService implements OnModuleInit {
       }
   }
 
-  sendMessage(chatId: number, text: string) {
+  sendMessage(chatId: string, text: string) {
     this.bot.sendMessage(chatId, text);
+  }
+  sendMessageWithKeyboard(chatId: string, text: string, reply_markup: ReplyKeyboardMarkup) {
+    this.bot.sendMessage(chatId, text, {
+      reply_markup:  reply_markup,
+    })
   }
 }

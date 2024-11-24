@@ -43,10 +43,17 @@ export class UsersService {
     return false;
   }
   async create(user: Partial<User>): Promise<User> {
-    const newUser = new this.userModel(user);
+    const newUser = await this.userModel.create(user);
     return newUser.save();
   }
-
+  async update(chatId: string, user: Partial<User>): Promise<any> {
+    const updatedUser = await this.userModel.updateOne({ chat_id: chatId }, user);
+    return updatedUser;
+  }
+  async deleteByChatId(chatId: string): Promise<{ success: boolean }> {
+    await this.userModel.deleteOne({ chat_id: chatId })
+    return { success: true }
+  }
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
