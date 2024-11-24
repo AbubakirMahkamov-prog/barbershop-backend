@@ -1,6 +1,7 @@
 export enum USER_STEP {
     START=1,
     GET_FULLNAME=2,
-    GET_PHONE=3,
-    VERIFIED=4
+    GET_PASSWORD=3,
+    GET_PHONE=4,
+    VERIFIED=5
 }

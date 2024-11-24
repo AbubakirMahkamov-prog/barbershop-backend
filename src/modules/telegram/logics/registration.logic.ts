@@ -6,9 +6,9 @@ import { UsersService } from 'src/modules/user/user.service';
 import { Command } from '../decorators/message/command.decorator';
 import { Message as IMessage, KeyboardButton } from 'node-telegram-bot-api';
 import { isPhoneNumberValidator } from 'src/shared/utils/is-phone-number';
-
+import { messageHelper } from "./constants/message.constant";
 @Injectable()
-export class StartCommand {
+export class RegistrationLogic {
   @Inject() userService: UsersService;
   constructor(private readonly telegramService: TelegramService) {}
   
@@ -18,7 +18,7 @@ export class StartCommand {
     const { username } = chat;
     const chatId = msg.chat.id.toString();
     const isVerified = await this.userService.checkVerified(chatId);
-    await this.telegramService.sendMessage(chatId, "Assalomu alaykum!");
+    await this.telegramService.sendMessage(chatId, messageHelper.greeting());
     if (!isVerified) {
       await this.userService.deleteByChatId(chatId);
       await this.userService.create({
@@ -26,7 +26,7 @@ export class StartCommand {
         tg_user_name: username
       });
       await this.userService.setStep(chatId, USER_STEP.GET_FULLNAME);
-      await this.telegramService.sendMessage(chatId, "Ismingizni kiriting!");  
+      await this.telegramService.sendMessage(chatId, messageHelper.askFullName());  
     } else {
       await this.userService.setStep(chatId, USER_STEP.START);
     }
@@ -36,18 +36,24 @@ export class StartCommand {
   async getFullName(msg: IMessage) {
     const chatId = msg.chat.id.toString();
     const { text } = msg;
-    await this.userService.update(chatId, { full_name: text });
+    await this.userService.update(chatId, { password: text });
+    await this.telegramService.sendMessage(chatId, messageHelper.askPassword())
+    this.userService.setStep(chatId, USER_STEP.GET_PASSWORD);    
+  }
+  @Message({ step: USER_STEP.GET_PASSWORD })
+  async getPassword(msg: IMessage) {
+    const chatId = msg.chat.id.toString();
     const keyboard: KeyboardButton[][] = [
-      [ { text: "Telefon raqamingizni jo'nating" , request_contact: true }]
+      [ { text: "Telegram raqamini jo'natish" , request_contact: true }]
     ]
-    await this.telegramService.sendMessage(chatId, `Telefon raqamingizni kiriting !`, {
+    await this.telegramService.sendMessage(chatId, messageHelper.askPhone(), {
       reply_markup: {
         keyboard: keyboard,
         resize_keyboard: true,
         one_time_keyboard: true
       }
     });
-    this.userService.setStep(chatId, USER_STEP.GET_PHONE);    
+    await this.userService.setStep(chatId, USER_STEP.GET_PHONE)
   }
   @Message({ step: USER_STEP.GET_PHONE })
   async getPhone(msg: IMessage) {
@@ -56,10 +62,10 @@ export class StartCommand {
     const phone_number = text ? text: contact.phone_number;
     const isValid = await isPhoneNumberValidator(phone_number)
     if (!isValid) {
-      await this.telegramService.sendMessage(chatId, "Telefon raqam to'g'ri formatda jo'nating. Masalan: (+998941021212)");
+      await this.telegramService.sendMessage(chatId, messageHelper.wrongPhoneState());
     }
     await this.userService.update(chatId, { phone_number })
-    await this.telegramService.sendMessage(chatId, "Siz akkountingiz tasdiqlandi !", {
+    await this.telegramService.sendMessage(chatId,  messageHelper.verifyAccount() ,{
       reply_markup: {
         remove_keyboard: true
       }
