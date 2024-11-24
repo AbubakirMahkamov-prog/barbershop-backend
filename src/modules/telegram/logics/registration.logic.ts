@@ -7,6 +7,8 @@ import { Command } from '../decorators/message/command.decorator';
 import { Message as IMessage, KeyboardButton } from 'node-telegram-bot-api';
 import { isPhoneNumberValidator } from 'src/shared/utils/is-phone-number';
 import { messageHelper } from "./constants/message.constant";
+import bcrypt from "bcrypt";
+
 @Injectable()
 export class RegistrationLogic {
   @Inject() userService: UsersService;
@@ -36,13 +38,17 @@ export class RegistrationLogic {
   async getFullName(msg: IMessage) {
     const chatId = msg.chat.id.toString();
     const { text } = msg;
-    await this.userService.update(chatId, { password: text });
+    await this.userService.update(chatId, { full_name: text });
     await this.telegramService.sendMessage(chatId, messageHelper.askPassword())
     this.userService.setStep(chatId, USER_STEP.GET_PASSWORD);    
   }
   @Message({ step: USER_STEP.GET_PASSWORD })
   async getPassword(msg: IMessage) {
     const chatId = msg.chat.id.toString();
+    const { text } = msg;
+    const salt = await bcrypt.genSalt();
+    const password = await bcrypt.hash(text, salt);
+    await this.userService.update(chatId, { password })
     const keyboard: KeyboardButton[][] = [
       [ { text: "Telegram raqamini jo'natish" , request_contact: true }]
     ]
