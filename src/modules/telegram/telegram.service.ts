@@ -88,12 +88,7 @@ export class TelegramService implements OnModuleInit {
       }
   }
 
-  sendMessage(chatId: string, text: string) {
-    this.bot.sendMessage(chatId, text);
-  }
-  sendMessageWithKeyboard(chatId: string, text: string, reply_markup: ReplyKeyboardMarkup) {
-    this.bot.sendMessage(chatId, text, {
-      reply_markup:  reply_markup,
-    })
+  async sendMessage(chatId: string, text: string, options?: TelegramBot.SendMessageOptions) {
+    await this.bot.sendMessage(chatId, text, options);
   }
 }
